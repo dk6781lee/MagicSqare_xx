@@ -2,7 +2,7 @@
 
 4×4 **부분 마방진** 학습·설계 프로젝트. Mom Test로 문제를 정의하고, **10개 라인(행4·열4·대각2) 합=34** 검증을 Rule·Command·Test Loop로 구현하는 것이 1차 목표입니다.
 
-> **현재 상태:** STEP 1~4 · **GREEN 완료** (Logic D-LOC/MIS/VAL, Control D-P0/P1, UI U-IN-01/02). **13 tests passed** · REFACTOR·D-P2-01(TBD) 후속.
+> **현재 상태:** STEP 1~6 · **GREEN + Golden Master** (D-SOL-01). **REFACTOR 1건** (`sol`→`find_not_exist_nums`). **14 tests passed** · 후보 B/C·D-P2-01 후속.
 
 ---
 
@@ -132,7 +132,9 @@ python -c "import entity, control, boundary; print('ok')"
 | STEP 3 TDD Plan | [`report/03.MagicSquare_1004-STEP3-TDD-Plan-Report.md`](report/03.MagicSquare_1004-STEP3-TDD-Plan-Report.md) |
 | STEP 4 RED Skeleton | [`report/04.MagicSquare_1004-STEP4-RED-Skeleton-Report.md`](report/04.MagicSquare_1004-STEP4-RED-Skeleton-Report.md) |
 | STEP 5 GREEN | [`report/05.MagicSquare_1004-STEP5-GREEN-Report.md`](report/05.MagicSquare_1004-STEP5-GREEN-Report.md) |
-| 세션 대화 | [`Prompring/01.*`](Prompring/) … [`Prompring/05.*`](Prompring/05.MagicSquare_1004-STEP5-Transcript-Export.md) |
+| STEP 6 Golden Master | [`report/06.MagicSquare_1004-STEP6-GoldenMaster-Report.md`](report/06.MagicSquare_1004-STEP6-GoldenMaster-Report.md) |
+| STEP 7 REFACTOR | [`report/07.MagicSquare_1004-STEP7-REFACTOR-Report.md`](report/07.MagicSquare_1004-STEP7-REFACTOR-Report.md) |
+| 세션 대화 | [`Prompring/01.*`](Prompring/) … [`Prompring/07.*`](Prompring/07.MagicSquare_1004-STEP7-REFACTOR-Transcript-Export.md) |
 
 ---
 
@@ -177,16 +179,18 @@ python -c "import entity, control, boundary; print('ok')"
 | Logic GREEN (D-LOC/MIS/VAL) | ✅ |
 | Control GREEN (C1–C3, D-P0/P1) | ✅ |
 | Boundary UI (U-IN-01/02) | ✅ |
-| REFACTOR · D-P2-01 (TBD) | ⬜ |
+| STEP 6 — Golden Master (D-SOL-01) | ✅ |
+| STEP 7 — REFACTOR (1건 + 스멜 문서) | ✅ (부분) |
+| REFACTOR 후보 B/C · D-P2-01 (TBD) | ⬜ |
 
 ---
 
 ## 다음 작업
 
 1. Q2 답변 반영
-2. **REFACTOR** — 동작 불변 정리 (`/review-ecb` 후)
-3. D-P2-01 (TBD) · Solver/GridUI 후속
-4. PR #1 merge · report/05 GREEN 보고 (선택)
+2. **REFACTOR 후보 B** — 10선 `failed_line_ids` SSOT (`/refactor-safe`)
+3. **REFACTOR 후보 C** — `scan_grid` + BlankPolicy
+4. D-P2-01 (TBD) · U-OUT-01 golden
 
 ---
 

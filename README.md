@@ -2,7 +2,7 @@
 
 4×4 **부분 마방진** 학습·설계 프로젝트. Mom Test로 문제를 정의하고, **10개 라인(행4·열4·대각2) 합=34** 검증을 Rule·Command·Test Loop로 구현하는 것이 1차 목표입니다.
 
-> **현재 상태:** 문서·요구사항 정리 완료 (STEP 1). **소스 코드는 아직 없음.**
+> **현재 상태:** STEP 1(문제 정의) · STEP 2(Harness·Cursor 규칙) **완료**. ECB 골격·Dual-Track TDD 준비됨. **도메인 구현·테스트 본문은 진행 중(RED 전).**
 
 ---
 
@@ -25,8 +25,10 @@
 | 격자 | 4×4 |
 | 빈칸 | `0` × **2** |
 | 숫자 | 1~16 (중복 없음) |
-| 마법 합 | **34** |
+| 마법 합 | **34** (MagicConstant SSOT) |
 | 검증 | **10라인** — H0–H3, V0–V3, D0·D1 |
+| 정상 출력 | `int[6]` → `[r1,c1,n1,r2,c2,n2]` (**좌표 1-index**) |
+| 오류 | E001~E007 (**boundary**); entity는 E001~E005 처리 금지 |
 
 **예시 (슬라이드 4.1, 빈칸 2개)**
 
@@ -46,7 +48,7 @@
 - 마방진 **완성 앱** / **Solver 자동 채우기**에만 집중
 - 행·열만 보고 34에서 빼기
 - `틀리면 false` 한 줄 응답만
-- (초기 범위) GridUI·전체 ECB 한 번에 완성
+- GridUI·전체 ECB **한 번에** 완성
 
 ---
 
@@ -54,15 +56,64 @@
 
 ```
 MagicSqare_xx/
-├── README.md                 ← 이 파일
+├── README.md
+├── .cursorrules              ← AI·TDD·ECB 규칙
+├── pyproject.toml            ← pytest Harness
+├── .cursor/
+│   ├── commands/             ← /tdd-red, /review-ecb
+│   └── skills/magic-square-tdd/
+├── src/
+│   ├── entity/               ← 도메인 (후속)
+│   ├── control/              ← Command·검증
+│   └── boundary/             ← I/O·E001~E007
+├── tests/
+│   ├── entity/               ← Logic D-*  test_d_*
+│   ├── control/
+│   └── boundary/             ← UI U-*  test_u_*
 ├── docs/
-│   └── PRD.md                ← 제품 요구 (Rule, Command, 테스트)
+│   └── PRD.md
 ├── report/
-│   ├── 01.MagicSquare_ProblemDefinition_Report.md  ← 문제 정의 통합
-│   └── 01.MagicSquare_1004-STEP1-MomTest-Report.md ← Mom Test STEP 1
+│   ├── 01.*                  ← STEP 1 Mom Test
+│   └── 02.*                  ← STEP 2 Harness
 └── Prompring/
-    └── 01.MagicSquare_1004-STEP1-Transcript-Export.md  ← 세션 대화 기록
+    ├── 01.* · 02.*
 ```
+
+---
+
+## 빠른 시작 (Harness)
+
+```powershell
+cd MagicSqare_xx
+pip install -e ".[dev]"
+pytest
+python -c "import entity, control, boundary; print('ok')"
+```
+
+| 명령 | 골격만 있을 때 |
+|------|----------------|
+| `pytest` | `collected 0 items` — 정상 |
+| import 확인 | `ok` |
+
+---
+
+## Dual-Track TDD
+
+| Track | Layer | 테스트 ID | 파일 | Mock |
+|-------|-------|-----------|------|------|
+| **Logic** | entity, control | `D-*` | `test_d_*.py` | Domain Mock **금지** |
+| **UI** | boundary | `U-*` | `test_u_*.py` | **허용** |
+
+**루프:** RED → GREEN → REFACTOR · assert 완화·skip·xfail 금지
+
+**Cursor**
+
+| 용도 | 경로 |
+|------|------|
+| 규칙 SSOT | [`.cursorrules`](.cursorrules) |
+| TDD 절차 Skill | [`.cursor/skills/magic-square-tdd/SKILL.md`](.cursor/skills/magic-square-tdd/SKILL.md) |
+| RED Command | [`.cursor/commands/tdd-red.md`](.cursor/commands/tdd-red.md) |
+| ECB 리뷰 | [`.cursor/commands/review-ecb.md`](.cursor/commands/review-ecb.md) |
 
 ---
 
@@ -70,22 +121,23 @@ MagicSqare_xx/
 
 | 읽을 때 | 파일 |
 |---------|------|
-| 요구·API·테스트 시나리오 | [`docs/PRD.md`](docs/PRD.md) |
+| 요구·Rule·Command·테스트 | [`docs/PRD.md`](docs/PRD.md) |
 | Mom Test + 도메인 + 채점 | [`report/01.MagicSquare_ProblemDefinition_Report.md`](report/01.MagicSquare_ProblemDefinition_Report.md) |
-| 인터뷰·종료 산출만 | [`report/01.MagicSquare_1004-STEP1-MomTest-Report.md`](report/01.MagicSquare_1004-STEP1-MomTest-Report.md) |
-| 프롬프트·대화 이력 | [`Prompring/01.MagicSquare_1004-STEP1-Transcript-Export.md`](Prompring/01.MagicSquare_1004-STEP1-Transcript-Export.md) |
+| STEP 1 인터뷰 | [`report/01.MagicSquare_1004-STEP1-MomTest-Report.md`](report/01.MagicSquare_1004-STEP1-MomTest-Report.md) |
+| STEP 2 Harness | [`report/02.MagicSquare_1004-STEP2-Harness-Report.md`](report/02.MagicSquare_1004-STEP2-Harness-Report.md) |
+| 세션 대화 | [`Prompring/01.*`](Prompring/), [`Prompring/02.*`](Prompring/) |
 
 ---
 
-## 아키텍처 (ECB, 과제 4.1 — 참고)
+## 아키텍처 (ECB)
 
-| 구분 | 클래스 | 1차 범위 |
-|------|--------|----------|
-| Entity | `MagicSquare`, `Cell`, `SolveResult` | 후속 |
-| Control | `SquareValidator`, `MissingFinder`, `Solver` | **Validator 우선** |
-| Boundary | `GridUI`, `InputHandler`, `ResultDisplay` | 후속 |
+의존: **boundary → control → entity** · entity → * import 금지
 
-**세션 3 (PRD) 범위:** Rule · Command · (Skill) · **Test Loop**
+| 구분 | 클래스 / 함수 | 범위 |
+|------|----------------|------|
+| Entity | `find_blank_coords`, `MagicSquare`, … | Logic **D-*** (예: D-LOC-01) |
+| Control | `SquareValidator`, `MissingFinder`, `Solver` | C1–C3, **Validator 우선** |
+| Boundary | `GridUI`, `InputHandler`, … | UI **U-*** (예: U-IN-01) |
 
 | Command | 설명 |
 |---------|------|
@@ -95,28 +147,43 @@ MagicSqare_xx/
 
 ---
 
+## Git 브랜치
+
+| 브랜치 | 용도 |
+|--------|------|
+| `main` | 통합 |
+| `staging` | 이슈·작업 기준 |
+| `spec` | 스펙·설계 |
+| `red` | RED 단계 TDD |
+
+원격: https://github.com/dk6781lee/MagicSqare_xx
+
+---
+
 ## 마일스톤
 
 | 단계 | 상태 |
 |------|------|
 | STEP 1 — Mom Test · 문제 정의 | ✅ |
-| `PRD.md` · report · Prompring | ✅ |
-| Q2 인터뷰 (인지 순간) | ⬜ 미답 |
-| Rule / Command / 테스트 코드 | ⬜ |
-| Solver · Boundary · Entity | ⬜ |
+| STEP 2 — Harness · `.cursorrules` · Cursor Skill/Command | ✅ |
+| Q2 인터뷰 (인지 순간) | ⬜ |
+| Logic RED (D-LOC-01 …) | ⬜ 진행 예정 |
+| Control GREEN (C1–C3) | ⬜ |
+| Boundary UI (U-IN-01 …) | ⬜ |
 
 ---
 
 ## 다음 작업
 
-1. Q2 답변 반영 (대각선 누락을 **언제·무엇을 보고** 알았는지)
-2. PRD §7 P0 테스트부터 Red → Green (`ValidateAllLines`, `CanClaimComplete`)
-3. 대각선만 34인데 “완료” 불가 케이스 고정 (Mom Test SC2)
+1. Q2 답변 반영
+2. **D-LOC-01** RED — `tests/entity/test_d_loc_01.py` (`find_blank_coords`, G1 row-major)
+3. PRD §7 P0 — `CanClaimComplete`, 대각선 누락 SC2
+4. MagicConstant SSOT 모듈 → Green
 
 ---
 
 ## 참고
 
 - 프로젝트 코드명: **MagicSquare_1004**
-- 폴더명: `MagicSqare_xx` (워크스페이스 경로)
+- 폴더명: `MagicSqare_xx`
 - Mom Test 자가 채점: **7 / 10** (Q2 미답)

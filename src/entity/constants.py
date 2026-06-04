@@ -1,0 +1,8 @@
+"""MagicConstant SSOT — 34 / 16 / 4 / 빈칸 2."""
+
+GRID_SIZE = 4
+MAGIC_SUM = 34
+MAGIC_MAX = 16
+VALUE_MIN = 1
+BLANK_CELL = 0
+BLANK_COUNT = 2

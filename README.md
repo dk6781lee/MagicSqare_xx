@@ -2,7 +2,7 @@
 
 4×4 **부분 마방진** 학습·설계 프로젝트. Mom Test로 문제를 정의하고, **10개 라인(행4·열4·대각2) 합=34** 검증을 Rule·Command·Test Loop로 구현하는 것이 1차 목표입니다.
 
-> **현재 상태:** STEP 1(문제 정의) · STEP 2(Harness·Cursor 규칙) **완료**. ECB 골격·Dual-Track TDD 준비됨. **도메인 구현·테스트 본문은 진행 중(RED 전).**
+> **현재 상태:** STEP 1~4 · **GREEN 완료** (Logic D-LOC/MIS/VAL, Control D-P0/P1, UI U-IN-01/02). **13 tests passed** · REFACTOR·D-P2-01(TBD) 후속.
 
 ---
 
@@ -63,9 +63,9 @@ MagicSqare_xx/
 │   ├── commands/             ← /tdd-red, /review-ecb
 │   └── skills/magic-square-tdd/
 ├── src/
-│   ├── entity/               ← 도메인 (후속)
-│   ├── control/              ← Command·검증
-│   └── boundary/             ← I/O·E001~E007
+│   ├── entity/               ← constants, loc, missing, validation, lines
+│   ├── control/              ← square_validator, grid_input, error_codes
+│   └── boundary/             ← input_handler
 ├── tests/
 │   ├── entity/               ← Logic D-*  test_d_*
 │   ├── control/
@@ -90,10 +90,12 @@ pytest
 python -c "import entity, control, boundary; print('ok')"
 ```
 
-| 명령 | 골격만 있을 때 |
-|------|----------------|
-| `pytest` | `collected 0 items` — 정상 |
+| 명령 | 기대 |
+|------|------|
+| `pytest` | **13 passed** |
 | import 확인 | `ok` |
+
+**Harness:** `tests/entity|control|boundary/`에 `__init__.py` 두지 않음 (`src/` 패키지 import shadow 방지).
 
 ---
 
@@ -113,6 +115,8 @@ python -c "import entity, control, boundary; print('ok')"
 | 규칙 SSOT | [`.cursorrules`](.cursorrules) |
 | TDD 절차 Skill | [`.cursor/skills/magic-square-tdd/SKILL.md`](.cursor/skills/magic-square-tdd/SKILL.md) |
 | RED Command | [`.cursor/commands/tdd-red.md`](.cursor/commands/tdd-red.md) |
+| RED 스켈레톤 | [`.cursor/commands/red-skeleton.md`](.cursor/commands/red-skeleton.md) |
+| GREEN 최소 | [`.cursor/commands/green-minimal.md`](.cursor/commands/green-minimal.md) |
 | ECB 리뷰 | [`.cursor/commands/review-ecb.md`](.cursor/commands/review-ecb.md) |
 
 ---
@@ -125,7 +129,10 @@ python -c "import entity, control, boundary; print('ok')"
 | Mom Test + 도메인 + 채점 | [`report/01.MagicSquare_ProblemDefinition_Report.md`](report/01.MagicSquare_ProblemDefinition_Report.md) |
 | STEP 1 인터뷰 | [`report/01.MagicSquare_1004-STEP1-MomTest-Report.md`](report/01.MagicSquare_1004-STEP1-MomTest-Report.md) |
 | STEP 2 Harness | [`report/02.MagicSquare_1004-STEP2-Harness-Report.md`](report/02.MagicSquare_1004-STEP2-Harness-Report.md) |
-| 세션 대화 | [`Prompring/01.*`](Prompring/), [`Prompring/02.*`](Prompring/) |
+| STEP 3 TDD Plan | [`report/03.MagicSquare_1004-STEP3-TDD-Plan-Report.md`](report/03.MagicSquare_1004-STEP3-TDD-Plan-Report.md) |
+| STEP 4 RED Skeleton | [`report/04.MagicSquare_1004-STEP4-RED-Skeleton-Report.md`](report/04.MagicSquare_1004-STEP4-RED-Skeleton-Report.md) |
+| STEP 5 GREEN | [`report/05.MagicSquare_1004-STEP5-GREEN-Report.md`](report/05.MagicSquare_1004-STEP5-GREEN-Report.md) |
+| 세션 대화 | [`Prompring/01.*`](Prompring/) … [`Prompring/05.*`](Prompring/05.MagicSquare_1004-STEP5-Transcript-Export.md) |
 
 ---
 
@@ -167,18 +174,19 @@ python -c "import entity, control, boundary; print('ok')"
 | STEP 1 — Mom Test · 문제 정의 | ✅ |
 | STEP 2 — Harness · `.cursorrules` · Cursor Skill/Command | ✅ |
 | Q2 인터뷰 (인지 순간) | ⬜ |
-| Logic RED (D-LOC-01 …) | ⬜ 진행 예정 |
-| Control GREEN (C1–C3) | ⬜ |
-| Boundary UI (U-IN-01 …) | ⬜ |
+| Logic GREEN (D-LOC/MIS/VAL) | ✅ |
+| Control GREEN (C1–C3, D-P0/P1) | ✅ |
+| Boundary UI (U-IN-01/02) | ✅ |
+| REFACTOR · D-P2-01 (TBD) | ⬜ |
 
 ---
 
 ## 다음 작업
 
 1. Q2 답변 반영
-2. **D-LOC-01** RED — `tests/entity/test_d_loc_01.py` (`find_blank_coords`, G1 row-major)
-3. PRD §7 P0 — `CanClaimComplete`, 대각선 누락 SC2
-4. MagicConstant SSOT 모듈 → Green
+2. **REFACTOR** — 동작 불변 정리 (`/review-ecb` 후)
+3. D-P2-01 (TBD) · Solver/GridUI 후속
+4. PR #1 merge · report/05 GREEN 보고 (선택)
 
 ---
 
